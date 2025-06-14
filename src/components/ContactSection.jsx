@@ -9,24 +9,35 @@ import {
   Send,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import emailjs from "@emailjs/browser";
 
 export const ContactSection = () => {
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const form = useRef();
+  const [isSending, setIsSending] = useState(false);
 
-  const handleSubmit = (e) => {
+  const sendEmail = (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setIsSending(true);
 
-    setTimeout(() => {
-      toast({
-        title: "Message sent!",
-        description: "Thank you for your message. I'll get back to you soon.",
-      });
-      setIsSubmitting(false);
-    }, 1500);
+    emailjs
+      .sendForm(
+        "service_xwx3bow",
+        "template_1nj4s8i",
+        form.current,
+        "sWx3iXf0UkTdRclaG"
+      )
+      .then(
+        (result) => {
+          alert("Message sent successfully!");
+          setIsSending(false);
+          form.current.reset();
+        },
+        (error) => {
+          alert("Failed to send the message. Try again.");
+          setIsSending(false);
+        }
+      );
   };
 
   return (
@@ -112,67 +123,66 @@ export const ContactSection = () => {
           </div>
 
           {/* Right Message Form */}
-          <div
-            className="bg-card p-8 rounded-lg transition-shadow duration-300 hover:shadow-[0_0_20px_rgba(139,92,246,0.4)]"
-            onSubmit={handleSubmit}
+          <form
+            ref={form}
+            onSubmit={sendEmail}
+            className="bg-card p-8 rounded-lg transition-shadow duration-300 hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] space-y-6"
           >
             <h3 className="text-2xl font-semibold mb-6">Send a Message</h3>
 
-            <form className="space-y-6">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-2">
-                  Your Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  required
-                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary"
-                  placeholder="Type your name..."
-                />
-              </div>
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium mb-2">
+                Your Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="from_name"
+                required
+                className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary"
+                placeholder="Type your name..."
+              />
+            </div>
 
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium mb-2">
-                  Your Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  required
-                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary"
-                  placeholder="Enter your email address..."
-                />
-              </div>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium mb-2">
+                Your Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="reply_to"
+                required
+                className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary"
+                placeholder="Enter your email address..."
+              />
+            </div>
 
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium mb-2">
-                  Your Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  required
-                  rows={5}
-                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary resize-none"
-                  placeholder="Place your thoughts here..."
-                />
-              </div>
+            <div>
+              <label htmlFor="message" className="block text-sm font-medium mb-2">
+                Your Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                required
+                rows={5}
+                className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary resize-none"
+                placeholder="Place your thoughts here..."
+              />
+            </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={cn(
-                  "cosmic-button w-full flex items-center justify-center gap-2"
-                )}
-              >
-                {isSubmitting ? "Sending..." : "Send Message"}
-                <Send size={16} />
-              </button>
-            </form>
-          </div>
+            <button
+              type="submit"
+              disabled={isSending}
+              className={cn(
+                "cosmic-button w-full flex items-center justify-center gap-2"
+              )}
+            >
+              {isSending ? "Sending..." : "Send Message"}
+              <Send size={16} />
+            </button>
+          </form>
         </div>
       </div>
     </section>
