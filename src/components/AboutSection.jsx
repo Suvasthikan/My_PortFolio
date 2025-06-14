@@ -32,7 +32,7 @@ export const AboutSection = () => {
               </a>
 
               <a
-                href="/Suvasthikan_CV.pdf"
+                href="/Suvasthikan.N_SE_CV.pdf"
                 download
                 className="px-6 py-2 rounded-full border border-primary text-primary 
                hover:bg-primary/10 hover:shadow-[0_0_20px_4px_rgba(139,92,246,0.8)] 
